@@ -42,7 +42,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let server_address = "table.apokalypse.email:1337"; // Die Adresse des Servers
     let rgba_img = image::open("airbus.jpg")?.to_rgb8();
 
-    let offset_x: u32 = 200;
+    let offset_x: u32 = 1700;
     let offset_y: u32 = 200;
 
     let (width, height) = rgba_img.dimensions();
