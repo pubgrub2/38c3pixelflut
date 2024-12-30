@@ -1,6 +1,7 @@
 use std::net::TcpStream;
 use std::io::{self, Write};
 use image::Pixel;
+use clap::Parser;
 
 /// Funktion zum Öffnen des TCP-Streams
 fn open_connection(address: &str) -> io::Result<TcpStream> {
@@ -27,6 +28,7 @@ fn set_pixels(pixels: &Vec<((u32, u32), (u8, u8, u8))>, stream: &mut TcpStream) 
     }
 
     // Alle Pixeländerungen auf einmal senden
+    // println!("{}", message);
     send_message(stream, &message)
 }
 
@@ -40,10 +42,10 @@ fn set_pixel(x: u32, y: u32, color: &str, stream: &mut TcpStream) -> io::Result<
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let server_address = "table.apokalypse.email:1337"; // Die Adresse des Servers
-    let rgba_img = image::open("airbus.jpg")?.to_rgb8();
+    let rgba_img = image::open("airbus.png")?.to_rgba8();
 
-    let offset_x: u32 = 1700;
-    let offset_y: u32 = 200;
+    let offset_x: u32 = 2800;
+    let offset_y: u32 = 500;
 
     let (width, height) = rgba_img.dimensions();
 
@@ -53,7 +55,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             for x in 0..width {
                 let pixel = rgba_img.get_pixel(x, y); // Get pixel at (x, y)
                 let rgba = pixel.channels(); // Extract RGBA channels
-                pixels.push(((x + offset_x, y + offset_y), (rgba[0], rgba[1], rgba[2])));
+                if rgba[3] != 0 {
+                    pixels.push(((x + offset_x, y + offset_y), (rgba[0], rgba[1], rgba[2])));
+                }
             }
         }
     
